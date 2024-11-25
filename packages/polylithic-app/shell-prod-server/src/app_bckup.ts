@@ -8,10 +8,10 @@ In this server version, the fragment is fetched and streamed but not replacing t
 
 import express from 'express';
 import path from 'path';
-import { ServerFragmentGateway } from './_middleware/middleware';
+import { FragmentGateway } from './_middleware/middleware';
 import { Readable } from 'stream';
 
-const fragmentGateway = new ServerFragmentGateway();
+const fragmentGateway = new FragmentGateway();
 
 fragmentGateway.initialize({
   prePiercingStyles: `
