@@ -1,4 +1,4 @@
-import { component$, useStore, useSignal, useVisibleTask$, $ } from '@builder.io/qwik';
+import { component$, useStore, useSignal, useVisibleTask$, $, useTask$} from '@builder.io/qwik';
 import { initialProducts } from '../../data/data';
 import './shopping-cart.css';
 
@@ -128,6 +128,7 @@ export const ShoppingCart = component$(() => {
 
   // load cart from localStorage or fallback to initial products
   useVisibleTask$(() => {
+    console.log('ShoppingCart: visible');
     const savedCart = localStorage.getItem('shoppingCart');
     if (savedCart) {
       try {
@@ -143,18 +144,43 @@ export const ShoppingCart = component$(() => {
       saveCartToLocalStorage();
     }
 
+    
+    const bc = new BroadcastChannel("/cart");
+    console.log('[cart], init', cart.items.length)
+
     const handleMessage = (event: MessageEvent) => {
+      console.log('[cart] Received message:', event.type, event.data);
       const { type, product } = event.data;
       if (type === 'add_to_cart') {
+        console.log('[cart] adding product to cart:', product);
         addItem(product);
+        //console.log('[cart] dispatching updated', cart.items);
+        //bc.postMessage({ type: 'updated', data: JSON.parse(JSON.stringify(cart.items)) });  
+      } else if (type === 'subscribe') {
+        bc.postMessage({ type: 'init', data: JSON.parse(JSON.stringify(cart.items)) });
       }
     };
-    const bc = new BroadcastChannel("/cart");
+
     bc.addEventListener('message', handleMessage);
+    console.log('[cart] dispatching init', cart.items);
+    bc.postMessage({ type: 'init', data: JSON.parse(JSON.stringify(cart.items)) });
+    
 
     return () => {
       bc.removeEventListener('message', handleMessage);
     };
+  });
+
+  useTask$(({ track, cleanup }) => {
+    const bc = new BroadcastChannel("/cart");
+    track(() => {
+      console.log('[cart] dispatching updated', cart.items);
+      bc.postMessage({ type: 'updated', data: JSON.parse(JSON.stringify(cart.items)) });  
+    });
+
+    cleanup(() => {
+      // cleanup code
+    });
   });
 
   return (

@@ -8,27 +8,26 @@ import { signal } from '@angular/core';
   styleUrls: ['./cart-display.component.css'],
   standalone: true
 })
-export class CartDisplayComponent implements OnInit {
-  itemCount = signal(0);
-  zoomAnimation = signal(false);
-  totalAmount = signal(0);
+export class CartDisplayComponent {
+  // zoomAnimation = signal(false);
+  // totalAmount = signal(0);
 
   constructor(
-    private cartService: CartService,
+    protected cartService: CartService,
   ) {}
 
-  ngOnInit(): void {
-    this.updateCartInfo();
-  }
+  // ngOnInit(): void {
+  //   this.updateCartInfo();
+  // }
 
-  updateCartInfo() {
-    this.triggerZoomAnimation();
-    this.itemCount.set(this.cartService.getTotalItems());
-    this.totalAmount.set(this.cartService.getTotalAmount());
-  }
+  // updateCartInfo() {
+  //   this.triggerZoomAnimation();
+  //   // this.itemCount.set(this.cartService.getTotalItems());
+  //   //this.totalAmount.set(this.cartService.getTotalAmount());
+  // }
 
-  triggerZoomAnimation() {
-    this.zoomAnimation.set(true);
-    setTimeout(() => this.zoomAnimation.set(false), 1000);
-  }
+  // triggerZoomAnimation() {
+  //   this.zoomAnimation.set(true);
+  //   setTimeout(() => this.zoomAnimation.set(false), 1000);
+  // }
 }

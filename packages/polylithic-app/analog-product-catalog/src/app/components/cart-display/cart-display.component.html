@@ -1,11 +1,10 @@
 <div
   class="cart-display"
-  [class.zoom]="zoomAnimation()"
 >
   <div class="checkout-content">
     <span>You have </span>
     <div class="cart-icon">
-      <span class="cart-icon-number">{{ itemCount() }}</span>
+      <span class="cart-icon-number">{{ cartService.totalItems() }}</span>
     </div>
     <span> items in the cart</span>
   </div>
